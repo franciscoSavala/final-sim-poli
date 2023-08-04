@@ -1,6 +1,7 @@
 package com.fran.finalsimpoli.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fran.finalsimpoli.util.Estadisticos;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import lombok.*;
 @Builder
 public class HandBall implements SimulationEvent {
 
-    private final static String tipo = "HAND_BALL";
+    private String tipo;
 
     private double rnd_llegada1;
     private double rnd_llegada2;
@@ -19,6 +20,7 @@ public class HandBall implements SimulationEvent {
     private double rnd_fin_juego1;
     private double rnd_fin_juego2;
     private double fin_juego;
+    @JsonIgnore
     private boolean llego;
 
     private EstadoDisciplina estado;
@@ -29,6 +31,7 @@ public class HandBall implements SimulationEvent {
         this.rnd_llegada2 = rnd_llegada2;
         this.llego = false;
         this.estado = EstadoDisciplina.NO_LLEGO;
+        this.tipo = "HAND_BALL";
     }
 
     @Override
@@ -41,7 +44,7 @@ public class HandBall implements SimulationEvent {
     public void execute(Simulation service, SimulationRequest simulationRequest) {
         if(!llego){
             service.setTotalLlegadaHandBall(service.getTotalLlegadaHandBall() + 1);
-            service.getLlegaron().add(this);
+            service.getLlegaronFutbolHandball().add(this);
 
 
             Cancha cancha = service.getCancha();
@@ -101,6 +104,7 @@ public class HandBall implements SimulationEvent {
                 .fin_juego(fin_juego)
                 .llegada(llegada)
                 .llego(llego)
+                .tipo(tipo)
                 .build();
     }
     @Override

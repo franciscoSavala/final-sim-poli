@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 
 @Component
 @Getter
@@ -33,7 +30,9 @@ public class Simulation {
     private int totalLlegadaHandBall;
     private int totalLlegadaBasketBall;
 
-    private List<SimulationEvent> llegaron;
+    private List<SimulationEvent> llegaronBasket;
+    private List<SimulationEvent> llegaronFutbolHandball;
+    private List<SimulationEvent> basura;
 
     private Random random;
 
@@ -47,6 +46,9 @@ public class Simulation {
 
     private int indice;
 
+    private boolean primeraVuelta;
+
+
     public void reset() {
         this.n = 0;
         this.evento = Evento.INICIO;
@@ -56,7 +58,9 @@ public class Simulation {
 
         this.random = new Random();
 
-        this.llegaron = new LinkedList<>();
+        this.llegaronBasket = new LinkedList<>();
+        this.llegaronFutbolHandball = new LinkedList<>();
+        this.basura = new LinkedList();
 
         this.finJuegoFutbolPrimero = null;
         this.llegadaHandBallPrimero = null;
@@ -69,6 +73,12 @@ public class Simulation {
         this.totalLlegadaFutbol = 0;
         this.totalLlegadaBasketBall = 0;
         this.totalLlegadaHandBall = 0;
+
+        this.primeraVuelta = true;
+    }
+
+    public List<SimulationEvent> getLlegaronBasket(){
+        if()
     }
 
     public SimulationResponse startSimulation(SimulationRequest simulationRequest) {
@@ -101,7 +111,6 @@ public class Simulation {
         Integer iter = simulationRequest.getIteraciones();
         Double aPartirDeHora = simulationRequest.getDesdeHora();
         Integer iteracionActual = 0;
-        boolean primeraVuelta = true;
 
         while(reloj < maxTime){
             double lastReloj = reloj;
@@ -151,9 +160,20 @@ public class Simulation {
     }
 
     private ResponseLine mapperLine() {
-        List<SimulationEvent> se = new LinkedList<>();
+        List<SimulationEvent> sefh = new LinkedList<>();
+        List<SimulationEvent> seb = new LinkedList<>();
+        int i = 0;
+        for(SimulationEvent se : llegaron){
+            if(i >= indice){
+                if(se instanceof BasketBall){
+                    seb.add(se.copy());
+                }else{
+                    sefh.add(se.copy());
+                }
+            }
+            i++;
+        }
 
-        for(int i = indice; i<llegaron.size(); i++) se.add(llegaron.get(i).copy());
 
 
         return ResponseLine.builder()
@@ -163,8 +183,8 @@ public class Simulation {
                 .futbolALlegar((Futbol)futbolPorllegar.copy())
                 .handBallALlegar((HandBall)handBallPorllegar.copy())
                 .basketBallALlegar((BasketBall)basketBallPorllegar.copy())
-                .jugando1(cancha.getJugando1())
-                .jugando2(cancha.getJugando2())
+                .jugando1((cancha.getJugando1() != null) ? cancha.getJugando1().copy() : null)
+                .jugando2((cancha.getJugando2() != null) ? cancha.getJugando2().copy() : null)
                 .cancha((Cancha)cancha.copy())
                 .colaHF(cancha.getColaFutbolHandBall().size())
                 .colaB(cancha.getColaBasket().size())
@@ -172,7 +192,8 @@ public class Simulation {
                 .acumuladorEsperaBasketBall(acumuladorEsperaBasketBall)
                 .acumuladorEsperaBasketBall(acumuladorEsperaBasketBall)
                 .finLimpieza((limpieza != null)? limpieza.getFinLimpieza() : Double.MAX_VALUE)
-                .llegaron(se)
+                .llegaronFutbolHandBall(sefh)
+                .llegaronBasketBall(seb)
                 .build();
     }
 }

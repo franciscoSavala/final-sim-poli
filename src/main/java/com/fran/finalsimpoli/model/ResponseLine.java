@@ -35,6 +35,7 @@ public class ResponseLine {
     private int acumuladorCantidadHandBallLlegaron;
     private int acumuladorCantidadBasketBallLlegaron;
 
-    private List<SimulationEvent> llegaron;
+    private List<SimulationEvent> llegaronFutbolHandBall;
+    private List<SimulationEvent> llegaronBasketBall;
 
 }
