@@ -1,6 +1,7 @@
 package com.fran.finalsimpoli.model;
 
 
+import com.fran.finalsimpoli.util.BuscadorIndice;
 import com.fran.finalsimpoli.util.Estadisticos;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,9 +31,8 @@ public class Simulation {
     private int totalLlegadaHandBall;
     private int totalLlegadaBasketBall;
 
-    private List<SimulationEvent> llegaronBasket;
-    private List<SimulationEvent> llegaronFutbolHandball;
-    private List<SimulationEvent> basura;
+    private BuscadorIndice llegaronBasket;
+    private BuscadorIndice llegaronFutbolHandball;
 
     private Random random;
 
@@ -58,9 +58,8 @@ public class Simulation {
 
         this.random = new Random();
 
-        this.llegaronBasket = new LinkedList<>();
-        this.llegaronFutbolHandball = new LinkedList<>();
-        this.basura = new LinkedList();
+        this.llegaronBasket = new BuscadorIndice(new LinkedList<>());
+        this.llegaronFutbolHandball = new BuscadorIndice(new LinkedList<>());
 
         this.finJuegoFutbolPrimero = null;
         this.llegadaHandBallPrimero = null;
@@ -77,9 +76,6 @@ public class Simulation {
         this.primeraVuelta = true;
     }
 
-    public List<SimulationEvent> getLlegaronBasket(){
-        if()
-    }
 
     public SimulationResponse startSimulation(SimulationRequest simulationRequest) {
         List<ResponseLine> data = new LinkedList<>();
@@ -112,23 +108,20 @@ public class Simulation {
         Double aPartirDeHora = simulationRequest.getDesdeHora();
         Integer iteracionActual = 0;
 
+        double lastReloj = reloj;
         while(reloj < maxTime){
-            double lastReloj = reloj;
-            acumuladorEsperaFutbol = cancha.acumularDisciplinaDesde(Futbol.class, lastReloj);
-            acumuladorEsperaHandBall = cancha.acumularDisciplinaDesde(HandBall.class, lastReloj);
-            acumuladorEsperaBasketBall = cancha.acumularDisciplinaDesde(BasketBall.class, lastReloj);
+            acumuladorEsperaFutbol += cancha.acumularDisciplinaDesde(Futbol.class, lastReloj, reloj);
+            acumuladorEsperaHandBall += cancha.acumularDisciplinaDesde(HandBall.class, lastReloj, reloj);
+            acumuladorEsperaBasketBall += cancha.acumularDisciplinaDesde(BasketBall.class, lastReloj, reloj);
 
             if(reloj >= aPartirDeHora && iteracionActual < iter){
-                if(primeraVuelta){
-                    buscarIndice();
-                    primeraVuelta = false;
-                }
                 ResponseLine responseLine = mapperLine();
                 data.add(responseLine);
                 iteracionActual++;
             }
 
             SimulationEvent actual = encontrarProximoEvento();
+            lastReloj = reloj;
             reloj = actual.timeEvent();
 
             actual.execute(this, simulationRequest);
@@ -137,17 +130,6 @@ public class Simulation {
         }
 
         return SimulationResponse.builder().data(data).build();
-    }
-
-    private void buscarIndice() {
-        int ind = 0;
-        for(SimulationEvent se : llegaron){
-            if(se.estado() != EstadoDisciplina.FIN_JUEGO){
-                indice = ind;
-                return;
-            }
-            ind++;
-        }
     }
 
     private SimulationEvent encontrarProximoEvento() {
@@ -160,21 +142,8 @@ public class Simulation {
     }
 
     private ResponseLine mapperLine() {
-        List<SimulationEvent> sefh = new LinkedList<>();
-        List<SimulationEvent> seb = new LinkedList<>();
-        int i = 0;
-        for(SimulationEvent se : llegaron){
-            if(i >= indice){
-                if(se instanceof BasketBall){
-                    seb.add(se.copy());
-                }else{
-                    sefh.add(se.copy());
-                }
-            }
-            i++;
-        }
-
-
+        List<SimulationEvent> sefh = llegaronFutbolHandball.buscarSubLista();
+        List<SimulationEvent> seb = llegaronBasket.buscarSubLista();
 
         return ResponseLine.builder()
                 .n(n)
@@ -190,7 +159,10 @@ public class Simulation {
                 .colaB(cancha.getColaBasket().size())
                 .acumuladorEsperaFutbol(acumuladorEsperaFutbol)
                 .acumuladorEsperaBasketBall(acumuladorEsperaBasketBall)
-                .acumuladorEsperaBasketBall(acumuladorEsperaBasketBall)
+                .acumuladorEsperaHandBall(acumuladorEsperaHandBall)
+                .acumuladorCantidadBasketBallLlegaron(totalLlegadaBasketBall)
+                .acumuladorCantidadHandBallLlegaron(totalLlegadaHandBall)
+                .acumuladorCantidadFutbolLlegaron(totalLlegadaFutbol)
                 .finLimpieza((limpieza != null)? limpieza.getFinLimpieza() : Double.MAX_VALUE)
                 .llegaronFutbolHandBall(sefh)
                 .llegaronBasketBall(seb)
