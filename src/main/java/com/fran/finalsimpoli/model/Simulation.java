@@ -69,6 +69,11 @@ public class Simulation {
 
         this.limpieza = null;
 
+        this.acumuladorEsperaFutbol = 0;
+        this.acumuladorEsperaBasketBall = 0;
+        this.acumuladorEsperaHandBall = 0;
+
+
         this.totalLlegadaFutbol = 0;
         this.totalLlegadaBasketBall = 0;
         this.totalLlegadaHandBall = 0;
@@ -166,6 +171,38 @@ public class Simulation {
                 .finLimpieza((limpieza != null)? limpieza.getFinLimpieza() : Double.MAX_VALUE)
                 .llegaronFutbolHandBall(sefh)
                 .llegaronBasketBall(seb)
+                .build();
+    }
+
+    public SimulationResponse lastLine() {
+        LinkedList<ResponseLine> rl = new LinkedList<>();
+        rl.add(ResponseLine.builder()
+                .n(n)
+                .evento(evento)
+                .reloj(reloj)
+                .futbolALlegar((Futbol)futbolPorllegar.copy())
+                .handBallALlegar((HandBall)handBallPorllegar.copy())
+                .basketBallALlegar((BasketBall)basketBallPorllegar.copy())
+                .jugando1((cancha.getJugando1() != null) ? cancha.getJugando1().copy() : null)
+                .jugando2((cancha.getJugando2() != null) ? cancha.getJugando2().copy() : null)
+                .cancha((Cancha)cancha.copy())
+                .colaHF(cancha.getColaFutbolHandBall().size())
+                .colaB(cancha.getColaBasket().size())
+                .acumuladorEsperaFutbol(acumuladorEsperaFutbol)
+                .acumuladorEsperaBasketBall(acumuladorEsperaBasketBall)
+                .acumuladorEsperaHandBall(acumuladorEsperaHandBall)
+                .acumuladorCantidadBasketBallLlegaron(totalLlegadaBasketBall)
+                .acumuladorCantidadHandBallLlegaron(totalLlegadaHandBall)
+                .acumuladorCantidadFutbolLlegaron(totalLlegadaFutbol)
+                .finLimpieza((limpieza != null)? limpieza.getFinLimpieza() : Double.MAX_VALUE)
+                .build());
+
+
+        return SimulationResponse.builder()
+                .data(rl)
+                .promedioEsperaFutbol(acumuladorEsperaFutbol / totalLlegadaFutbol)
+                .promedioEsperaHandBall(acumuladorEsperaHandBall / totalLlegadaHandBall)
+                .promedioEsperaBasketBall(acumuladorEsperaBasketBall / totalLlegadaBasketBall)
                 .build();
     }
 }

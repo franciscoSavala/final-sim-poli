@@ -140,8 +140,9 @@ public class BasketBall implements SimulationEvent{
     }
 
     @Override
-    public double acumular(double lastReloj) {
-        return lastReloj - llegada;
+    public double acumular(double lastReloj, double reloj) {
+        if(reloj == llegada) return 0;
+        return reloj - lastReloj;
     }
 }
 

@@ -13,4 +13,8 @@ import java.util.List;
 @Builder
 public class SimulationResponse {
     List<ResponseLine> data;
+    double promedioEsperaFutbol;
+    double promedioEsperaBasketBall;
+    double promedioEsperaHandBall;
+
 }

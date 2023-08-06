@@ -54,7 +54,7 @@ public class Limpieza implements SimulationEvent{
     }
 
     @Override
-    public double acumular(double lastReloj) {
+    public double acumular(double lastReloj, double reloj) {
         return 0;
     }
 

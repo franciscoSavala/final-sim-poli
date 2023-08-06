@@ -16,11 +16,8 @@ public class PolideportivoService {
         return simulation.startSimulation(simulationRequest);
     }
 
-    public SimulationResponse getTable(Long page) {
-        return SimulationResponse.builder().build();
-    }
 
-    public ResponseLine getLastLine() {
-        return ResponseLine.builder().build();
+    public SimulationResponse lastLine() {
+        return simulation.lastLine();
     }
 }

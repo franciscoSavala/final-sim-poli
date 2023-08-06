@@ -78,7 +78,7 @@ public class Cancha implements SimulationEvent{
     }
 
     @Override
-    public double acumular(double lastReloj) {
+    public double acumular(double lastReloj, double reloj) {
         return 0;
     }
 
@@ -110,8 +110,8 @@ public class Cancha implements SimulationEvent{
 
     public double acumularDisciplinaDesde(Class disciplinaClass, double lastReloj, double reloj) {
         double acumulador = 0;
-        for(SimulationEvent se : colaFutbolHandBall) acumulador += (disciplinaClass.isInstance(se)) ? se.acumular(lastReloj) + se.acumular(reloj) : 0;
-        for(SimulationEvent se : colaBasket) acumulador += (disciplinaClass.isInstance(se)) ? se.acumular(lastReloj) + se.acumular(reloj): 0;
+        for(SimulationEvent se : colaFutbolHandBall) acumulador += (disciplinaClass.isInstance(se)) ? se.acumular(lastReloj, reloj) : 0;
+        for(SimulationEvent se : colaBasket) acumulador += (disciplinaClass.isInstance(se)) ? se.acumular(lastReloj, reloj) : 0;
 
         return acumulador;
     }

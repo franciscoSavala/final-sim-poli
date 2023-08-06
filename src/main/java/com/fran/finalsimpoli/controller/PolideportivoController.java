@@ -19,4 +19,10 @@ public class PolideportivoController {
     public ResponseEntity<SimulationResponse> simulation(@RequestBody SimulationRequest simulationRequest){
         return ResponseEntity.ok(service.simulate(simulationRequest));
     }
+
+    @GetMapping
+    public ResponseEntity<SimulationResponse> lastLine(){
+        return ResponseEntity.ok(service.lastLine());
+
+    }
 }

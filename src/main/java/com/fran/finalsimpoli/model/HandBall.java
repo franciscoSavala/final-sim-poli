@@ -113,10 +113,10 @@ public class HandBall implements SimulationEvent {
     }
 
     @Override
-    public double acumular(double lastReloj) {
-        return lastReloj - llegada;
+    public double acumular(double lastReloj, double reloj) {
+        if(reloj == llegada) return 0;
+        return reloj - lastReloj;
     }
-
     @Override
     public void generarFinJuego(Simulation service, SimulationRequest simulationRequest) {
         boolean primero = false;
