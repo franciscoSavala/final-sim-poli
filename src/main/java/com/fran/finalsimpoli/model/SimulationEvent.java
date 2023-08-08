@@ -1,5 +1,7 @@
 package com.fran.finalsimpoli.model;
 
+import java.util.LinkedList;
+
 public interface SimulationEvent extends Comparable<SimulationEvent> {
     Double timeEvent();
 
@@ -12,4 +14,6 @@ public interface SimulationEvent extends Comparable<SimulationEvent> {
     void generarFinJuego(Simulation service, SimulationRequest simulationRequest);
 
     EstadoDisciplina estado();
+
+    double getFinJuego();
 }

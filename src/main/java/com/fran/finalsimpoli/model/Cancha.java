@@ -93,6 +93,11 @@ public class Cancha implements SimulationEvent{
     }
 
     @Override
+    public double getFinJuego() {
+        return 0;
+    }
+
+    @Override
     public int compareTo(SimulationEvent o) {
         return Double.compare(this.timeEvent(), o.timeEvent());
     }

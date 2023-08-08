@@ -8,7 +8,8 @@ public class Estadisticos {
         double z2 = sq * Math.sin(2 * Math.PI * rnd2);
 
         double z = first ? z1 : z2;
-        return z * dev + mean;
+        double ans = z * dev + mean;
+        return ans >= 0 ? ans : 0;
     }
 
     public static double exponential(double rnd, double mean){

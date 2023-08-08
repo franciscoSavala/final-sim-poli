@@ -120,6 +120,11 @@ public class BasketBall implements SimulationEvent{
     }
 
     @Override
+    public double getFinJuego() {
+        return fin_juego;
+    }
+
+    @Override
     public SimulationEvent copy() {
         return BasketBall.builder()
                 .estado(estado)

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fran.finalsimpoli.util.Estadisticos;
 import lombok.*;
 
+import java.util.LinkedList;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -112,6 +114,12 @@ public class Futbol implements SimulationEvent{
     public EstadoDisciplina estado() {
         return estado;
     }
+
+    @Override
+    public double getFinJuego() {
+        return fin_juego;
+    }
+
 
     @Override
     public int compareTo(SimulationEvent o) {

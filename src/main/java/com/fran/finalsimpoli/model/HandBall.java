@@ -141,4 +141,9 @@ public class HandBall implements SimulationEvent {
     public EstadoDisciplina estado() {
         return estado;
     }
+
+    @Override
+    public double getFinJuego() {
+        return fin_juego;
+    }
 }

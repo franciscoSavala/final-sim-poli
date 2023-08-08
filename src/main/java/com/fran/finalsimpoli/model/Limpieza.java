@@ -69,6 +69,11 @@ public class Limpieza implements SimulationEvent{
     }
 
     @Override
+    public double getFinJuego() {
+        return 0;
+    }
+
+    @Override
     public int compareTo(SimulationEvent o) {
         return Double.compare(timeEvent(), o.timeEvent());
     }
