@@ -25,4 +25,9 @@ public class PolideportivoController {
         return ResponseEntity.ok(service.lastLine());
 
     }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> health(){
+        return ResponseEntity.ok("OKAY");
+    }
 }
